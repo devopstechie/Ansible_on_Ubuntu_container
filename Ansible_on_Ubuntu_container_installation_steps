@@ -1,0 +1,69 @@
+On your AWS instance install docker 
+Note : I am taking Amazon Ami 2 
+
+#Install and start docker in aws instance
+yum update
+yum install docker -y
+service docker start
+service docker enable
+
+#create two containers one is ansible master other act as slave
+#taking twocontainers on ubuntu
+docker run -td --name ansiblemaster --hostname ansiblemaster ubuntu /bin/bash
+docker run -td --name agent --hostname agent ubuntu /bin/bash
+
+#note the ip of agent (second conatiner) using below command
+docker inspect agent
+
+Note: In my case it is 172.17.0.3
+
+#Take two terminals and in first Go into ansiblemaster and in second go into agent 
+#In First terminal :
+docker exec -it ansiblemaster /bin/bash
+#In Second terminal :
+docker exec -it agent /bin/bash
+
+#you will enter into the conatiners you can see the change in terminal
+
+#In first Container you can see 'root@ansible_master' on right of terminal.run below commands inside ansible master container(first)
+apt update
+apt install ansible vim openssh-client iputils-ping -y
+apt update
+
+#In second Container you can see 'root@agent' on right of terminal. run below commands inside agent container(second)
+apt update
+apt install ssh vim -y
+apt update
+#change password of root by below command 
+passwd root
+#change the below file and add next line in below file
+vim /etc/ssh/sshd_config
+                PermitRootLogin yes
+#restrat ssh service
+service ssh restart
+
+#In Ansible master (first)
+#ping the agent ip using below command
+ping 172.17.0.3
+#create the keygen using below command (after executing you can give enter for every prompt)
+ssh-keygen
+#copy the ssh key of agent by below command
+ssh-copy-id root@172.17.0.3
+#try doing ssh to the agent
+ssh 'root@172.17.0.3'
+#Note: after this command you will see 'root@agent' on right of terminal which means you able to do ssh to agent fom master
+#add the agent (add next line into below file) in ansible master
+vim /etc/ansible/hosts
+    [testagents]
+    172.17.0.3
+#Try ping from master using ansible
+ansible -m ping testagents
+
+#output of above command
+172.17.0.3 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+
+#HURRAY WE ARE ABLE TO PING AGENTS FROM ANSIBLE MASTER
