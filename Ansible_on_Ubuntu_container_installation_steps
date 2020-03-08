@@ -67,3 +67,10 @@ ansible -m ping testagents
 
 
 #HURRAY WE ARE ABLE TO PING AGENTS FROM ANSIBLE MASTER
+#NOTE : 
+Error: "module_stderr": "/bin/sh: 1: /usr/bin/python: not found\n", 
+       "module_stdout": "", "msg": "MODULE FAILURE\nSee stdout/stderr for the exact error", 
+        "rc": 127
+then change the file /etc/ansible/hosts again to 
+  [testagents]
+    172.17.0.3 ansible_python_interpreter: /usr/bin/python3
