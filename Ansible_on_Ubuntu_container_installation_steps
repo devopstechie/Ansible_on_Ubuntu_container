@@ -27,7 +27,7 @@ docker exec -it agent /bin/bash
 
 #In first Container you can see 'root@ansible_master' on right of terminal.run below commands inside ansible master container(first)
 apt update
-apt install ansible vim openssh-client iputils-ping -y
+apt install ansible vim python3 openssh-client iputils-ping -y
 apt update
 
 #In second Container you can see 'root@agent' on right of terminal. run below commands inside agent container(second)
