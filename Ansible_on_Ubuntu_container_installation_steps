@@ -74,3 +74,8 @@ Error: "module_stderr": "/bin/sh: 1: /usr/bin/python: not found\n",
 then change the file /etc/ansible/hosts again to 
   [testagents]
     172.17.0.3 ansible_python_interpreter: /usr/bin/python3
+    
+OR
+give below command to run that 
+ansible -m ping testagents -e ansible_python_interpreter=/usr/bin/python3
+
