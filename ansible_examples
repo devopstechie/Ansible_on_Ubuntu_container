@@ -82,7 +82,18 @@ PLAYBOOK FILE TREE:
 └── tomcat
 
 
+Create a directory
 
+---
+- name: Creating directory
+  hosts: all
+  tasks:
+         - name: create dir
+           file:
+                name: /tmp/newdir
+                state: directory
+                
+                
 
 Installing tree using playbook
 
