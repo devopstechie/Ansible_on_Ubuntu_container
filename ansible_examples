@@ -87,11 +87,11 @@ PLAYBOOK FILE TREE:
 Installing tree using playbook
 
 ---
--name: Installing tree
- hosts: all
- tasks:
-         -name: tree installations
-          yum:
+- name: Installing tree
+  hosts: all
+  tasks:
+         - name: tree installations
+           yum:
                 name: tree
                 state: present
 
@@ -102,16 +102,16 @@ ansible-playbook playbook.yml --syntax --check
 Create a dir and copy the password 
 
 ---
--name: Creating dir and copy the file content
- hosts: all
- tasks:
-         -name: create dir
-          file:
+- name: Creating dir and copy the file content
+  hosts: all
+  tasks:
+         - name: create dir
+           file:
                 name: /tmp/newdir
                 state: directory
-         -name: copy file content
-          copy:
-                 src: /tmp//txt1
+         - name: copy file content
+           copy:
+                 src: /tmp/txt1
                  dest: /tmp/newdir/txt2
 
 
@@ -124,7 +124,7 @@ Config tomcat 7 using playbook
  tasks:
 name: Install tomcat 7
          yum: 
-               -name: tomcat7
+               - name: tomcat7
                 State: present
 name: change tomcat port from 8080 to 9090
          replace:
