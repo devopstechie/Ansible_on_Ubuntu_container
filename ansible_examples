@@ -1,0 +1,144 @@
+Important modules in Ansible:
+1.command
+cmd :
+ansible all/ipaddress/group -m module -name -a ' name:  '
+
+ansible all -m command -a 'll'
+
+2.shell
+ansible all -m shell -a 'sh get-script.sh'
+
+3.ping
+ansible all -m ping
+4.copy - copy into manged nodes
+ansible all -m copy -a 'src=/etc/password dest=/tmp mode=777 owner=root ' -b
+5.fetch - copy from manged nodes into controler
+ansible all -m fetch -a 'src=/etc/password dest=/tmp' -b
+6.file - delete or create
+ansible all -m file -a 'name=/file1 state=absent' -b
+7.start - detailed info abt file
+ansible all -m start -a 'path=/file1' 
+8.replace
+ansible all -m replace -a ‘path=/etc/tomcat/server.xml regexp=’8080’ replace=’9090’’ -b
+9.debug
+10.user
+ansible all -m user -a 'name=user1 password=pswd1' -b
+11.apt
+ansible testagents -m apt -a 'name=git state=present' -e ansible_python_interpreter=/usr/bin/python3
+12.yum
+ansible all -m yum -a 'name=httpd state=present' -b
+13.service
+ansible all -m service -a 'name=httpd state=restarted' -b
+14.url
+ansible all -m url -a 'url=google.com status=200'
+15.ec2
+16.docker-image
+17.docker-container
+18.docker-login
+
+
+
+
+
+
+
+
+
+PLAYBOOK FOLDER TREE :
+
+$ tree
+.
+├── roles
+│   └── tomcat
+│       ├── defaults
+│       ├── handlers
+│       ├── tasks
+│       └── vars
+└── tomcat
+
+7 directories, 0 files
+
+
+
+
+PLAYBOOK FILE TREE:
+
+├── roles
+│   └── tomcat
+│       ├── defaults
+│       │   └── main.yml
+│       ├── handlers
+│       │   └── main.yml
+│       ├── tasks
+│       │   ├── main.yml
+│       │   ├── tomcat-Debian.yml
+│       │   └── tomcat-RedHat.yml
+│       ├── templates
+│       │   └── tomcat.service.j2
+│       └── vars
+│           ├── Debian.yml
+│           └── RedHat.yml
+├── setup-tomcat.yml
+└── tomcat
+
+
+
+
+Installing tree using playbook
+
+---
+-name: Installing tree
+ hosts: all
+ tasks:
+         -name: tree installations
+          yum:
+                name: tree
+                state: present
+
+Check the syntax 
+ansible-playbook playbook.yml --syntax --check 
+
+
+Create a dir and copy the password 
+
+---
+-name: Creating dir and copy the file content
+ hosts: all
+ tasks:
+         -name: create dir
+          file:
+                name: /tmp/newdir
+                state: directory
+         -name: copy file content
+          copy:
+                 src: /tmp//txt1
+                 dest: /tmp/newdir/txt2
+
+
+
+Config tomcat 7 using playbook
+
+---
+- name: configuring tomcat
+ hosts: all
+ tasks:
+name: Install tomcat 7
+         yum: 
+               -name: tomcat7
+                State: present
+name: change tomcat port from 8080 to 9090
+         replace:
+               regexp: “8080”
+               replace: “9090”
+               path: /etc/tomcat7/server.xml
+name: restart tomcat
+          service: 
+                 name: tomcat7
+                 state: restarted
+name: pause for 3 sec
+          pause:
+                  seconds:3
+name: check the tomcat url
+           url:
+               url: localhost:9090
+               status:200
